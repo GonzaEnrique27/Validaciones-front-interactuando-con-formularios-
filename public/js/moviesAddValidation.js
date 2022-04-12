@@ -44,7 +44,7 @@ const validarFormulario = (e) => {
           validarCampo(expresiones.rating, e.target, "rating")
           let rating = document.getElementById("rating")
           if(rating.value > 10){
-            campos["rating"] = false
+            campos.rating = false
           }
       
       break;
@@ -52,7 +52,7 @@ const validarFormulario = (e) => {
       case "awards":
         validarCampo(expresiones.rating, e.target, "awards")
         if(inputs.value > 10){
-          campos['awards'] = false
+          campos.awards = false
         }
        
       break;
@@ -81,13 +81,13 @@ const validarFormulario = (e) => {
 
    function validarGenre(){
     var genre =document.getElementById('grupo__genre_id');
-    if(genre.value.trim() == 0 || genre.value.trim() == ""){
+    if(genre.value.trim() == 0 || genre.value.trim() == null){
      genre.classList.add("is-invalid");
-     campos["genre_id"] = false
+     campos.genre_id = false
       } else {
         genre.classList.remove("is-invalid");
         genre.classList.add("is-valid");
-        campos["genre_id"] = true
+        campos.genre_id = true
       }
     }
 

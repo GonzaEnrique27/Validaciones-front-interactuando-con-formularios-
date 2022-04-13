@@ -1,137 +1,90 @@
-
+window.onload = function(){
     let titulo = document.querySelector('.moviesAddTitulo')
     let formulario = document.querySelector('#formulario');
-    let inputs = document.querySelectorAll('#formulario input')
     let article = document.querySelector('article');
     titulo.innerHTML = 'AGREGAR PELÍCULA';
     titulo.classList.add('titulo');
     article.classList.add('fondoTransparente');
     formulario.classList.add('fondoCRUD');
 
-//------DESDE AQUÍ CONTINÚE CON LAS VALIDACIONES DEL FORMULARIO //
-//-------------------DE REGISTRO DE PELÍCULAS------------------//    
+//------DESDE AQUÍ CONTINUE CON LAS VALIDACIONES DEL FORMULARIO -------//    
+    let form = document.querySelector('.form');
+    form.title.focus();
+    form.addEventListener('submit', (e) => {
+        
+        let errors = [];
 
-let title = document.querySelector('#title')
-title.focus()
+        let title = document.querySelector('#title');
+        let rating = document.querySelector('#rating');
+        let awards = document.querySelector('#awards');
+        let release_date = document.querySelector('#release_date');
+        let length = document.querySelector('#length');
+        let genre_id = document.querySelector('#genre_id');
 
+        if (title.value == '') {
+            errors.push('El campo titulo no puede estar vacío');
+            title.classList.add('is-invalid');
+        } else {
+            title.classList.add('is-valid');
+            title.classList.remove('is-invalid');
+            form.rating.focus();
+        };
+        if (rating.value <= 0 || rating.value > 10.0) {
+            errors.push('El campo calificación no puede ser menor a cero ni mayor a 10');
+            rating.classList.add('is-invalid');
+        } else {
+            rating.classList.add('is-valid');
+            rating.classList.remove('is-invalid');
+            form.awards.focus();
+        };
+        if (awards.value <= 0 || awards.value > 10) {
+            errors.push('El campo premios no puede ser menor a cero ni mayor a 10');
+            awards.classList.add('is-invalid');
+        } else {
+            awards.classList.add('is-valid');
+            awards.classList.remove('is-invalid');
+            form.release_date.focus();
+        };
+        if (release_date.value == "") {
+            errors.push('El campo fecha de creación no puede estar vacio');
+            release_date.classList.add('is-invalid');
+        } else {
+            release_date.classList.add('is-valid');
+            release_date.classList.remove('is-invalid');
+            form.length.focus();
+        };
+        if (length.value < 60 || length.value > 360) {
+            errors.push('El campo duración no puede ser menor a 60 ni mayor a 360 minutos');
+            length.classList.add('is-invalid');
+        } else {
+            length.classList.add('is-valid');
+            length.classList.remove('is-invalid');
+            form.genre_id.focus();
+        };
+        if (genre_id.value == '') {
+            errors.push('El campo género no puede estar vacío');
+            genre_id.classList.add('is-invalid');
+        } else {
+            genre_id.classList.add('is-valid');
+            genre_id.classList.remove('is-invalid');
+        };
+        
+        //Aquí controlo que es lo que debo hacer si hay o no errores en el formulario
 
-const expresiones = {               
-	title: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
-	rating: /^([VE]-)?[0-9]{1,2}$/i, 
-  release_date:/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/,
-    length: /^([VE]-)?[0-9]{2,3}$/i,
-}
-
- const campos = {
-    titulo:false,
-     rating: false,
-     awards: false,
-     release_date: false,
-     length: false,
-     genre_id: false
-   }
-
-
-
-const validarFormulario = (e) => {
-    switch (e.target.name) {
-      case "title":
-      validarCampo(expresiones.title, e.target, "titulo")
-       
-      break;
-     
-      case "rating":
-          validarCampo(expresiones.rating, e.target, "rating")
-          let rating = document.getElementById("rating")
-          if(rating.value > 10){
-            campos.rating = false
-          }
-      
-      break;
-   
-      case "awards":
-        validarCampo(expresiones.rating, e.target, "awards")
-        if(inputs.value > 10){
-          campos.awards = false
+        if (errors.length > 0) {
+            e.preventDefault();
+            let ulErrors = document.querySelector('.errores');
+            ulErrors.classList.add('alert-warning');
+            ulErrors.innerHTML = '';
+            for (let i = 0; i < errors.length; i++) {
+                ulErrors.innerHTML += `<li >  ${errors[i]} </li>`;
+            };
+        }else{
+            alert('La validación fué exitosa')
+            form.submit();
         }
-       
-      break;
 
-      case "release_date":
-        validarCampo(expresiones.release_date, e.target, "release_date")
-        break;
+    });
 
-      
-      case "length":
-        validarCampo(expresiones.length, e.target, "length")
-        if(length.value > 60 < 360){
-          campos['length'] = true
-        }
-       
-      break;
-
-      case "genre_id":
-        validarGenre()
-
-      break
-   
-    }
-   
-   }
-
-   function validarGenre(){
-    var genre =document.getElementById('grupo__genre_id');
-    if(genre.value.trim() == 0 || genre.value.trim() == null){
-     genre.classList.add("is-invalid");
-     campos.genre_id = false
-      } else {
-        genre.classList.remove("is-invalid");
-        genre.classList.add("is-valid");
-        campos.genre_id = true
-      }
-    }
-
-
-
-
-   const validarCampo = (expresion, input, campo) => {
-	if(expresion.test(input.value)){
-		document.getElementById(`grupo__${campo}`).classList.add('is-valid');
-		document.getElementById(`grupo__${campo}`).classList.remove('is-invalid');
-	  campos[campo]= true;
-  } else {
-		document.getElementById(`grupo__${campo}`).classList.remove('is-valid');
-		document.getElementById(`grupo__${campo}`).classList.add('is-invalid');	
-    document.querySelector(".errores").innerHTML = ""
-    campos[campo]= false;
-  }
-}
-
-
-console.log(campos)
-
-
-
-inputs.forEach((input)=>{
-    input.addEventListener('keyup', validarFormulario)
-    input.addEventListener('blur', validarFormulario)
-  })
-
-formulario.addEventListener('submit', (e) => {
-    e.preventDefault()
-    const elements = e.target.elements;
-  let error = false;
-
-  for (let i = 0; i < elements.length -4; i++) {
-  if (elements[i].value === ""){
-    error = true
-    document.getElementById("grupo__" + elements[i].name).classList.add('is-invalid')
-  }
 
 }
-if(campos.title && campos.rating && campos.awards && campos.length && campos.release_date && campos.genre_id){
-  formulario.submit();
-}
-
-})
-
